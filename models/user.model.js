@@ -45,9 +45,13 @@ async function getUserDetails(access_token) {
         Authorization: "Bearer " + access_token,
       },
     })
-    .then(({ data: { id, display_name, images } }) => {
-      console.log( id, display_name, images)
-      return { id, display_name, image: images[0].url };
+    .then(({data}) => {
+      console.log(data);
+      return {
+        id: data.id,
+        display_name: data.display_name,
+        image: data.images[0].url,
+      };
     });
 }
 
