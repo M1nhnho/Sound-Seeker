@@ -124,4 +124,10 @@ async function fetchUser(id) {
   mongoose.disconnect();
 }
 
-module.exports = { saveUser, fetchUser };
+async function removeUser(id) {
+  await connect();
+  await User.findOneAndDelete({ id });
+  mongoose.disconnect();
+}
+
+module.exports = { saveUser, fetchUser, removeUser };

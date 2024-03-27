@@ -1,5 +1,5 @@
 const express = require('express');
-const { postUser, getUser } = require('./controllers/user.controller.js');
+const { postUser, getUser, deleteUser } = require('./controllers/user.controller.js');
 
 const app = express();
 app.use(express.json());
@@ -8,8 +8,10 @@ app.post('/api/users', postUser);
 
 app.get('/api/users/:id', getUser);
 
-app.get('/api/healthCheck', (req,res)=>{
-    res.status(200).send({msg:"server live"})
+app.delete('/api/users/:id', deleteUser);
+
+app.get('/api/healthCheck', (req, res)=>{
+    res.status(200).send({msg:"Server live!"})
 })
 
 app.listen(9090, () => {
