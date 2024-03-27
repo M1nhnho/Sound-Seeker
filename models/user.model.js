@@ -47,11 +47,18 @@ async function getUserDetails(access_token) {
     })
     .then(({data}) => {
       console.log(data);
-      return {
-        id: data.id,
-        display_name: data.display_name,
-        image: data.images[0].url,
-      };
+      return data.id
+    })
+    .then((id)=>{
+      return axios.get(`https://api.spotify.com/v1/users/${id}`,{
+        headers: {
+          Authorization: "Bearer " + access_token,
+        },
+      })
+      .then((response)=>{
+        console.log(response)
+        return response
+      })
     });
 }
 
