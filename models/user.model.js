@@ -5,6 +5,12 @@ const axios = require("axios");
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
 const redirectUri = process.env.REDIRECT_URI;
+const SpotifyWebApi = require('spotify-web-api-node');
+const spotifyApi = new SpotifyWebApi({
+  clientId,
+  clientSecret,
+  redirectUri,
+});
 
 async function getFirstTokenData(code) {
   const postBody = `grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}`;
@@ -39,27 +45,32 @@ async function getRefreshTokenData(refresh_token) {
 }
 
 async function getUserDetails(access_token) {
-  return axios
-    .get("https://api.spotify.com/v1/me", {
-      headers: {
-        Authorization: "Bearer " + access_token,
-      },
-    })
-    .then(({data}) => {
-      console.log(data);
-      return data.id
-    })
-    .then((id)=>{
-      return axios.get(`https://api.spotify.com/v1/users/${id}`,{
-        headers: {
-          Authorization: "Bearer " + access_token,
-        },
-      })
-      .then((response)=>{
-        console.log(response)
-        return response
-      })
-    });
+  spotifyApi.setAccessToken(access_token)
+  spotifyApi.getMe().then((user)=>{
+    console.log(user)
+  })
+  // return axios
+  //   .get("https://api.spotify.com/v1/me", {
+  //     headers: {
+  //       Authorization: "Bearer " + access_token,
+  //     },
+  //   })
+  //   .then(({ data }) => {
+  //     console.log(data);
+  //     return data.id;
+  //   })
+  //   .then((id) => {
+  //     return axios
+  //       .get(`https://api.spotify.com/v1/users/${id}`, {
+  //         headers: {
+  //           Authorization: "Bearer " + access_token,
+  //         },
+  //       })
+  //       .then((response) => {
+  //         console.log(response);
+  //         return response;
+  //       });
+  //   });
 }
 
 async function getTopArtists(access_token) {
