@@ -8,76 +8,6 @@ const spotifyApi = new SpotifyWebApi({
   redirectUri: process.env.REDIRECT_URI
 });
 
-// async function getFirstTokenData(code) {
-//   const postBody = `grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}`;
-//   return axios
-//     .post("https://accounts.spotify.com/api/token", postBody, {
-//       headers: {
-//         Authorization:
-//           "Basic " +
-//           new Buffer.from(clientId + ":" + clientSecret).toString("base64"),
-//         "Content-Type": "application/x-www-form-urlencoded",
-//       },
-//     })
-//     .then(({ data }) => {
-//       return data;
-//     });
-// }
-
-// async function getRefreshTokenData() {
-//   const postBody = `grant_type=refresh_token&refresh_token=${refresh_token}`;
-//   return axios
-//     .post("https://accounts.spotify.com/api/token", postBody, {
-//       headers: {
-//         Authorization:
-//           "Basic " +
-//           new Buffer.from(clientId + ":" + clientSecret).toString("base64"),
-//         "Content-Type": "application/x-www-form-urlencoded",
-//       },
-//     })
-//     .then(({ data }) => {
-//       return data;
-//     });
-// }
-
-// async function getUserDetails(access_token) {
-//   return axios
-//     .get("https://api.spotify.com/v1/me", {
-//       headers: {
-//         Authorization: "Bearer " + access_token,
-//       },
-//     })
-//     .then(({ data }) => {
-//       console.log(data);
-//       return data.id;
-//     })
-//     .then((id) => {
-//       return axios
-//         .get(`https://api.spotify.com/v1/users/${id}`, {
-//           headers: {
-//             Authorization: "Bearer " + access_token,
-//           },
-//         })
-//         .then((response) => {
-//           console.log(response);
-//           return response;
-//         });
-//     });
-// }
-
-// async function getTopArtists(access_token) {
-//   return axios
-//     .get("https://api.spotify.com/v1/me/top/artists", {
-//       params: { limit: 50, offset: 0 },
-//       headers: {
-//         Authorization: "Bearer " + access_token,
-//       },
-//     })
-//     .then(({ data: { items } }) => {
-//       return items;
-//     });
-// }
-
 async function saveUser({ code }) {
   await connect();
   const newBody = {};
@@ -123,7 +53,6 @@ async function saveUser({ code }) {
       return newUser.save();
     })
     .then((newUser) => {
-      console.log(newUser);
       mongoose.disconnect();
       return newUser;
     })
