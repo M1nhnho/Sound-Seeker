@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const connect = require("../database/connection.js");
 const User = require("../mongoose-models/user.js");
-const SpotifyWebApi = require('spotify-web-api-node');
+const SpotifyWebApi = require("spotify-web-api-node");
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  redirectUri: process.env.REDIRECT_URI
+  redirectUri: process.env.REDIRECT_URI,
 });
 
 async function saveUser({ code }) {
@@ -13,7 +13,7 @@ async function saveUser({ code }) {
   const newBody = {};
   return spotifyApi
     .authorizationCodeGrant(code)
-    .then(({ body: {access_token, refresh_token, expires_in}}) => {
+    .then(({ body: { access_token, refresh_token, expires_in } }) => {
       newBody.access_token = access_token;
       newBody.refresh_token = refresh_token;
       newBody.expiry_date = Date.now() + expires_in * 1000;
@@ -22,14 +22,19 @@ async function saveUser({ code }) {
       spotifyApi.setRefreshToken(refresh_token);
       return spotifyApi.getMe();
     })
-    .then(({ body: { id, display_name, images }}) => {
+    .then(({ body: { id, display_name, images } }) => {
       newBody.id = id;
       newBody.display_name = display_name;
-      newBody.image = images[0].url;
+      if (images > 0) {
+        newBody.image =
+          "https://files.slack.com/files-tmb/T01KPE0QGCD-F06RU8D6ACU-5d0da9163e/default-avatar-icon_360.jpg";
+      } else {
+        newBody.image = images[0].url;
+      }
 
-      return spotifyApi.getMyTopArtists({ limit: 50 })
+      return spotifyApi.getMyTopArtists({ limit: 50 });
     })
-    .then(({ body: { items }}) => {
+    .then(({ body: { items } }) => {
       const topArtists = items;
       newBody.top_artists = topArtists.map((artist) => artist.name);
 
@@ -59,8 +64,7 @@ async function saveUser({ code }) {
     .catch((err) => {
       console.log(err);
       mongoose.disconnect();
-    })
-
+    });
 }
 
 async function fetchUser(id) {
