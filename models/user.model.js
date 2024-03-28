@@ -17,7 +17,6 @@ async function saveUser({ code }) {
       newBody.access_token = access_token;
       newBody.refresh_token = refresh_token;
       newBody.expiry_date = Date.now() + expires_in * 1000;
-
       spotifyApi.setAccessToken(access_token);
       spotifyApi.setRefreshToken(refresh_token);
       return spotifyApi.getMe();
@@ -79,8 +78,8 @@ async function fetchUser(id) {
       await User.findOneAndUpdate(
         { id },
         {
-          access_token: tokenData.access_token,
-          expiry_date: Date.now() + tokenData.expires_in * 1000,
+          access_token: tokenData.body.access_token,
+          expiry_date: Date.now() + tokenData.body.expires_in * 1000,
         }
       );
     }
