@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-const connect = require("../database/connection.js");
 const User = require("../mongoose-models/user.js");
 const SpotifyWebApi = require("spotify-web-api-node");
 const spotifyApi = new SpotifyWebApi({
@@ -9,7 +7,6 @@ const spotifyApi = new SpotifyWebApi({
 });
 
 async function saveUser({ code }) {
-  await connect();
   const newBody = {};
   return spotifyApi
     .authorizationCodeGrant(code)
@@ -56,25 +53,30 @@ async function saveUser({ code }) {
       const newUser = new User(newBody);
       return newUser.save();
     })
-    .then((newUser) => {
-      mongoose.disconnect();
+    .then(({ access_token, refresh_token, expiry_date, ...newUser}) => {
       return newUser;
     })
     .catch((err) => {
       console.log(err);
-      mongoose.disconnect();
     });
 }
 
 async function fetchUser(id) {
-  await connect();
+  try {
+    const { access_token, refresh_token, expiry_date, ...user } = await User.findOne({ id });
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function fetchUserToken(id) {
   try {
     const user = await User.findOne({ id });
     if (Date.now() >= user.expiry_date) {
       spotifyApi.setAccessToken(user.access_token);
       spotifyApi.setRefreshToken(user.refresh_token);
       const tokenData = await spotifyApi.refreshAccessToken();
-      spotifyApi.setAccessToken(tokenData.body.access_token);
       await User.findOneAndUpdate(
         { id },
         {
@@ -83,18 +85,14 @@ async function fetchUser(id) {
         }
       );
     }
-    mongoose.disconnect();
-    return user;
+    return user.access_token;
   } catch (err) {
     console.log(err);
   }
-  mongoose.disconnect();
 }
 
 async function removeUser(id) {
-  await connect();
   await User.findOneAndDelete({ id });
-  mongoose.disconnect();
 }
 
-module.exports = { saveUser, fetchUser, removeUser };
+module.exports = { saveUser, fetchUser, fetchUserToken, removeUser };
