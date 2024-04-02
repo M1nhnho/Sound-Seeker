@@ -52,19 +52,19 @@ async function saveUser({ code }) {
       const newUser = new User(newBody);
       return newUser.save();
     })
-    .then(({ access_token, refresh_token, expiry_date, ...newUser }) => {
-      return newUser;
+    .then(({ id, display_name, image, top_artists, top_genres }) => {
+      return { id, display_name, image, top_artists, top_genres };
     })
     .catch((err) => {
       console.log(err);
     });
 }
 
-async function fetchUser(id) {
+async function fetchUser(userID) {
   try {
-    const { access_token, refresh_token, expiry_date, ...user } =
-      await User.findOne({ id });
-    return user;
+    const { id, display_name, image, top_artists, top_genres } =
+      await User.findOne({ userID });
+    return { id, display_name, image, top_artists, top_genres };
   } catch (err) {
     console.log(err);
   }
