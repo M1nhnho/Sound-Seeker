@@ -19,8 +19,8 @@ function getUser(req, res) {
 
 function getUserToken(req, res) {
   const {id} = req.params
-  fetchUserToken(id).then((user) => {
-    res.status(200).send({ user });
+  fetchUserToken(id).then((token) => {
+    res.status(200).send({ token });
   })
 }
 
