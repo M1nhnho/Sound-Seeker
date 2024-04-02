@@ -1,6 +1,6 @@
+const connectDatabase = require('./database/connection.js');
 const express = require('express');
 const { postUser, getUser, getUserToken, deleteUser } = require('./controllers/user.controller.js');
-const connectDatabase = require('./database/connection.js');
 
 const app = express();
 app.use(express.json());

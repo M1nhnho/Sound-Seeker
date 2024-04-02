@@ -49,22 +49,27 @@ async function saveUser({ code }) {
         return topGenresObj[current] - topGenresObj[previous];
       });
       newBody.top_genres = topGenresArr;
+      return User.findOne({ id: newBody.id });
+    })
+    .then((foundUser) => {
       const newUser = new User(newBody);
-      return newUser.save();
+      return foundUser ? User.findOneAndUpdate({ id: newUser.id }, newBody) : newUser.save();
     })
     .then(({ id, display_name, image, top_artists, top_genres }) => {
       return { id, display_name, image, top_artists, top_genres };
     })
-    .catch((err) => {
-      console.log(err);
-    });
 }
 
-async function fetchUser(userID) {
+async function fetchUser(id) {
   try {
-    const { id, display_name, image, top_artists, top_genres } =
-      await User.findOne({ userID });
-    return { id, display_name, image, top_artists, top_genres };
+    const user = await User.findOne({ id });
+    return {
+      id: user.id,
+      display_name: user.display_name,
+      image: user.image,
+      top_artists: user.top_artists,
+      top_genres: user.top_genres
+    };
   } catch (err) {
     console.log(err);
   }
