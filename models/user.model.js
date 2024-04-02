@@ -48,8 +48,8 @@ async function saveUser({ code }) {
       topGenresArr.sort((previous, current) => {
         return topGenresObj[current] - topGenresObj[previous];
       });
+      topGenresArr.slice(0,20)
       newBody.top_genres = topGenresArr;
-
       const newUser = new User(newBody);
       return newUser.save();
     })
