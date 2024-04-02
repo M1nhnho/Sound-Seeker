@@ -48,12 +48,11 @@ async function saveUser({ code }) {
       topGenresArr.sort((previous, current) => {
         return topGenresObj[current] - topGenresObj[previous];
       });
-      topGenresArr.slice(0,20)
       newBody.top_genres = topGenresArr;
       const newUser = new User(newBody);
       return newUser.save();
     })
-    .then(({ access_token, refresh_token, expiry_date, ...newUser}) => {
+    .then(({ access_token, refresh_token, expiry_date, ...newUser }) => {
       return newUser;
     })
     .catch((err) => {
@@ -63,7 +62,8 @@ async function saveUser({ code }) {
 
 async function fetchUser(id) {
   try {
-    const { access_token, refresh_token, expiry_date, ...user } = await User.findOne({ id });
+    const { access_token, refresh_token, expiry_date, ...user } =
+      await User.findOne({ id });
     return user;
   } catch (err) {
     console.log(err);
