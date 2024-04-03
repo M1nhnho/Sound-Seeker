@@ -92,6 +92,7 @@ async function fetchUserToken(id) {
           expiry_date: Date.now() + tokenData.body.expires_in * 1000,
         }
       );
+      return tokenData.body.access_token;
     }
     return user.access_token;
   } catch (err) {
