@@ -58,6 +58,9 @@ async function saveUser({ code }) {
     .then(({ id, display_name, image, top_artists, top_genres }) => {
       return { id, display_name, image, top_artists, top_genres };
     })
+    .catch((err) => {
+      console.log(err);
+    })
 }
 
 async function fetchUser(id) {
