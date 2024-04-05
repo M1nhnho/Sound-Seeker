@@ -4,6 +4,8 @@
 
 Welcome to the backend of Sound Seeker! This repository houses the server-side code that powers our Festival Recommender App. Built with MongoDB, Mongoose, and Express.js, our backend manages user data storage, Spotify API integration, and token management for seamless access to Spotify's features.
 
+For an overview of our app, please refer to the repo [here](https://github.com/sjdmurden/Sound-Seeker-fe).
+
 ## Features
 - **User Data Storage:** Our backend saves user information, including Spotify data such as top artists and top genres, to the MongoDB database.
 - **Spotify API Integration:** The backend handles requests to the Spotify API retrieving user data.
